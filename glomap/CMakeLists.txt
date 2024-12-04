@@ -37,7 +37,6 @@ set(SOURCES
     colmap_migration/ply.cc
     colmap_migration/projection.cc
     colmap_migration/reconstruction_io.cc
-    colmap_migration/endian.cc
     colmap_migration/specs.cc
     colmap_migration/database_sensor.cc
     colmap_migration/timer.cc
@@ -215,7 +214,6 @@ target_link_libraries(
         ${SQLite3_LIBRARIES}
         ${FREEIMAGE_LIBRARIES}
         ${TORCH_LIBRARIES}
-        ${BOOST_LIBRARIES}
 )
 target_include_directories(glomap PUBLIC ..)
 

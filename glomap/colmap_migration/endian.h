@@ -29,59 +29,44 @@
 
 #pragma once
 
+#include <bit>
+#include <concepts>
+#include <ranges>
+
 #include <algorithm>
 #include <iostream>
+#include <span>
 #include <vector>
 
 namespace glomap {
 
-    // Reverse the order of each byte.
+    // Concept to ensure we only work with trivially copyable types
     template <typename T>
-    T ReverseBytes(const T& data);
+    concept TriviallyCopyable = std::is_trivially_copyable_v<T>;
 
-    // Check the order in which bytes are stored in computer memory.
-    bool IsLittleEndian();
-    bool IsBigEndian();
-
-    // Convert data between endianness and the native format. Note that, for float
-    // and double types, these functions are only valid if the format is IEEE-754.
-    // This is the case for pretty much most processors.
-    template <typename T>
-    T LittleEndianToNative(T x);
-    template <typename T>
-    T BigEndianToNative(T x);
-    template <typename T>
-    T NativeToLittleEndian(T x);
-    template <typename T>
-    T NativeToBigEndian(T x);
-
-    // Read data in little endian format for cross-platform support.
-    template <typename T>
-    T ReadBinaryLittleEndian(std::istream* stream);
-    template <typename T>
-    void ReadBinaryLittleEndian(std::istream* stream, std::vector<T>* data);
-
-    // Write data in little endian format for cross-platform support.
-    template <typename T>
-    void WriteBinaryLittleEndian(std::ostream* stream, const T& data);
-    template <typename T>
-    void WriteBinaryLittleEndian(std::ostream* stream, const std::vector<T>& data);
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // Implementation
-    ////////////////////////////////////////////////////////////////////////////////
-
-    template <typename T>
-    T ReverseBytes(const T& data) {
-        T data_reversed = data;
-        std::reverse(reinterpret_cast<char*>(&data_reversed),
-                     reinterpret_cast<char*>(&data_reversed) + sizeof(T));
-        return data_reversed;
+    // Reverse the order of bytes
+    template <TriviallyCopyable T>
+    [[nodiscard]] constexpr T ReverseBytes(const T& data) noexcept {
+        auto bytes = std::bit_cast<std::array<std::byte, sizeof(T)>>(data);
+        std::ranges::reverse(bytes);
+        return std::bit_cast<T>(bytes);
     }
 
-    template <typename T>
-    T LittleEndianToNative(const T x) {
-        if (IsLittleEndian())
+    inline constexpr bool is_little_endian = std::endian::native == std::endian::little;
+    inline constexpr bool is_big_endian = std::endian::native == std::endian::big;
+
+    [[nodiscard]] consteval bool IsLittleEndian() noexcept {
+        return is_little_endian;
+    }
+
+    [[nodiscard]] consteval bool IsBigEndian() noexcept {
+        return is_big_endian;
+    }
+
+    // Endianness conversion functions
+    template <TriviallyCopyable T>
+    [[nodiscard]] constexpr T LittleEndianToNative(T x) noexcept {
+        if constexpr (is_little_endian)
         {
             return x;
         } else
@@ -90,9 +75,9 @@ namespace glomap {
         }
     }
 
-    template <typename T>
-    T BigEndianToNative(const T x) {
-        if (IsBigEndian())
+    template <TriviallyCopyable T>
+    [[nodiscard]] constexpr T BigEndianToNative(T x) noexcept {
+        if constexpr (is_big_endian)
         {
             return x;
         } else
@@ -101,9 +86,9 @@ namespace glomap {
         }
     }
 
-    template <typename T>
-    T NativeToLittleEndian(const T x) {
-        if (IsLittleEndian())
+    template <TriviallyCopyable T>
+    [[nodiscard]] constexpr T NativeToLittleEndian(T x) noexcept {
+        if constexpr (is_little_endian)
         {
             return x;
         } else
@@ -112,9 +97,9 @@ namespace glomap {
         }
     }
 
-    template <typename T>
-    T NativeToBigEndian(const T x) {
-        if (IsBigEndian())
+    template <TriviallyCopyable T>
+    [[nodiscard]] constexpr T NativeToBigEndian(T x) noexcept {
+        if constexpr (is_big_endian)
         {
             return x;
         } else
@@ -123,32 +108,58 @@ namespace glomap {
         }
     }
 
-    template <typename T>
-    T ReadBinaryLittleEndian(std::istream* stream) {
-        T data_little_endian;
-        stream->read(reinterpret_cast<char*>(&data_little_endian), sizeof(T));
-        return LittleEndianToNative(data_little_endian);
+    // Rest of the implementation remains the same...
+    // Binary I/O functions
+    template <TriviallyCopyable T>
+    [[nodiscard]] T ReadBinaryLittleEndian(std::istream* stream) {
+        T data;
+        if (!stream->read(reinterpret_cast<char*>(&data), sizeof(T)))
+        {
+            throw std::runtime_error("Failed to read binary data");
+        }
+        return LittleEndianToNative(data);
     }
 
-    template <typename T>
+    template <TriviallyCopyable T>
     void ReadBinaryLittleEndian(std::istream* stream, std::vector<T>* data) {
-        for (size_t i = 0; i < data->size(); ++i)
+        for (auto& element : *data)
         {
-            (*data)[i] = ReadBinaryLittleEndian<T>(stream);
+            element = ReadBinaryLittleEndian<T>(stream);
         }
     }
 
-    template <typename T>
-    void WriteBinaryLittleEndian(std::ostream* stream, const T& data) {
-        const T data_little_endian = NativeToLittleEndian(data);
-        stream->write(reinterpret_cast<const char*>(&data_little_endian), sizeof(T));
+    template <TriviallyCopyable T>
+    void ReadBinaryLittleEndian(std::istream* stream, std::vector<T>& data) {
+        ReadBinaryLittleEndian(stream, &data);
     }
 
-    template <typename T>
-    void WriteBinaryLittleEndian(std::ostream* stream, const std::vector<T>& data) {
-        for (const auto& elem : data)
+    template <TriviallyCopyable T>
+    void WriteBinaryLittleEndian(std::ostream* stream, const T& data) {
+        const T converted = NativeToLittleEndian(data);
+        if (!stream->write(reinterpret_cast<const char*>(&converted), sizeof(T)))
         {
-            WriteBinaryLittleEndian<T>(stream, elem);
+            throw std::runtime_error("Failed to write binary data");
+        }
+    }
+
+    template <TriviallyCopyable T>
+    void WriteBinaryLittleEndian(std::ostream* stream, const std::vector<T>* data) {
+        for (const auto& element : *data)
+        {
+            WriteBinaryLittleEndian(stream, element);
+        }
+    }
+
+    template <TriviallyCopyable T>
+    void WriteBinaryLittleEndian(std::ostream* stream, const std::vector<T>& data) {
+        WriteBinaryLittleEndian(stream, &data);
+    }
+
+    template <TriviallyCopyable T>
+    void WriteBinaryLittleEndian(std::ostream* stream, std::span<const T> data) {
+        for (const auto& element : data)
+        {
+            WriteBinaryLittleEndian(stream, element);
         }
     }
 
