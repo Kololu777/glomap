@@ -1,3 +1,11 @@
+# 🚧 Under HEAVY Development
+
+This project aims to be fully self-contained, eliminating dependencies like COLMAP and minimizing others like Boost and Eigen3. 
+All operations will transition to LibTorch to enable integration with modern AI-based solutions. 
+The primary goal is to leverage GPU acceleration for faster camera pose generation in NVS pipelines (faster and more robust than rc :). 
+Ultimately, the project will provide an end-to-end solution, from feature extraction to matching and mapping.
+
+
 # GLOMAP: Global Structure-from-Motion Revisited
 
 [Project page](https://lpanaf.github.io/eccv24_glomap/) | [Paper](https://arxiv.org/pdf/2407.20219)
