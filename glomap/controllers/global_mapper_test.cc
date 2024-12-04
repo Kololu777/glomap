@@ -62,8 +62,8 @@ namespace glomap {
 
             ViewGraph view_graph;
             std::unordered_map<camera_t, Camera> cameras;
-            std::unordered_map<image_t, Image> images;
-            std::unordered_map<track_t, Track> tracks;
+            std::unordered_map<image_t, migration::Image> images;
+            std::unordered_map<track_t, migration::Track> tracks;
 
             ConvertDatabaseToGlomap(database, view_graph, cameras, images);
 
@@ -96,8 +96,8 @@ namespace glomap {
 
             ViewGraph view_graph;
             std::unordered_map<camera_t, Camera> cameras;
-            std::unordered_map<image_t, Image> images;
-            std::unordered_map<track_t, Track> tracks;
+            std::unordered_map<image_t, migration::Image> images;
+            std::unordered_map<track_t, migration::Track> tracks;
 
             ConvertDatabaseToGlomap(database, view_graph, cameras, images);
 

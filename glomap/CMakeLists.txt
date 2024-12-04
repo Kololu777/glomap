@@ -73,6 +73,7 @@ set(SOURCES
     io/gravity_io.cc
     math/gravity.cc
     math/rigid3d.cc
+    math/rigid3d_torch.cc
     math/tree.cc
     math/two_view_geometry.cc
     processors/image_pair_inliers.cc
@@ -176,6 +177,8 @@ set(HEADERS
     math/gravity.h
     math/l1_solver.h
     math/rigid3d.h
+    math/rigid3d_torch.h
+    math/rigid3d_torch_utils.h
     math/tree.h
     math/two_view_geometry.h
     math/union_find.h
@@ -242,11 +245,12 @@ install(TARGETS glomap_main DESTINATION bin)
 
 if(TESTS_ENABLED)
     add_executable(glomap_test
-        controllers/global_mapper_test.cc
+            controllers/global_mapper_test.cc
+            math_test/rigid3d_torch_test.cc    # Add this line
     )
     target_link_libraries(
-        glomap_test
-        PRIVATE
+            glomap_test
+            PRIVATE
             glomap
             GTest::gtest
             GTest::gtest_main)
