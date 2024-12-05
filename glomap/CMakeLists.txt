@@ -76,6 +76,7 @@ set(SOURCES
     math/rigid3d_torch.cc
     math/tree.cc
     math/two_view_geometry.cc
+    math/two_view_geometry_torch.cc
     processors/image_pair_inliers.cc
     processors/image_undistorter.cc
     processors/reconstruction_normalizer.cc
@@ -181,6 +182,7 @@ set(HEADERS
     math/rigid3d_torch_utils.h
     math/tree.h
     math/two_view_geometry.h
+    math/two_view_geometry_torch.h
     math/union_find.h
     processors/image_pair_inliers.h
     processors/image_undistorter.h
@@ -246,7 +248,8 @@ install(TARGETS glomap_main DESTINATION bin)
 if(TESTS_ENABLED)
     add_executable(glomap_test
             controllers/global_mapper_test.cc
-            math_test/rigid3d_torch_test.cc    # Add this line
+            math_test/rigid3d_torch_test.cc
+            math_test/two_view_geometry_torch_test.cc
     )
     target_link_libraries(
             glomap_test
