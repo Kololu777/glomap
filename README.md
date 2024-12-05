@@ -5,6 +5,8 @@ All operations will transition to LibTorch to enable integration with modern AI-
 The primary goal is to leverage GPU acceleration for faster camera pose generation in NVS pipelines (faster and more robust than rc :). 
 Ultimately, the project will provide an end-to-end solution, from feature extraction to matching and mapping.
 
+If you are interested in collaborating on this project, would like to reach out to me, or are considering to contribute to the discussion of the overall NeRF/GS pipeline, please join the Discord: https://discord.gg/NqwTqVYVmj
+
 
 # GLOMAP: Global Structure-from-Motion Revisited
 
