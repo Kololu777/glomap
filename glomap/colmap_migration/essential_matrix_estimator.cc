@@ -99,8 +99,6 @@ namespace glomap {
 
         // Step 5: Extraction of roots from the degree 10 polynomial.
         Eigen::Matrix<double, 11, 1> coeffs;
-#include "colmap/estimators/essential_matrix_coeffs.h"
-
         Eigen::VectorXd roots_real;
         Eigen::VectorXd roots_imag;
         if (!FindPolynomialRootsCompanionMatrix(coeffs, &roots_real, &roots_imag))
