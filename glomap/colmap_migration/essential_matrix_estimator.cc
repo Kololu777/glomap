@@ -77,7 +77,6 @@ namespace glomap {
         // Step 3: Gauss-Jordan elimination with partial pivoting on A.
 
         Eigen::Matrix<double, 10, 20> A;
-#include "colmap/estimators/essential_matrix_poly.h"
         const Eigen::Matrix<double, 10, 10> AA =
             A.block<10, 10>(0, 0).partialPivLu().solve(A.block<10, 10>(0, 10));
 
@@ -100,8 +99,6 @@ namespace glomap {
 
         // Step 5: Extraction of roots from the degree 10 polynomial.
         Eigen::Matrix<double, 11, 1> coeffs;
-#include "colmap/estimators/essential_matrix_coeffs.h"
-
         Eigen::VectorXd roots_real;
         Eigen::VectorXd roots_imag;
         if (!FindPolynomialRootsCompanionMatrix(coeffs, &roots_real, &roots_imag))
