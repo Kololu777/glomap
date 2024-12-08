@@ -1,0 +1,9 @@
+{
+    "name": "GLOMAP",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "remoteUser": "vscode",
+	//"postCreateCommand": "export PATH=\"$HOME/.local/bin:$PATH\" && bash ./tool/script/setup_uv.sh"
+}
