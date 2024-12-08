@@ -9,6 +9,7 @@ bash
 
 3. Setup environment
 ```
+mkdir external
 cd external
 wget https://download.pytorch.org/libtorch/cu124/libtorch-shared-with-deps-2.5.1%2Bcu124.zip
 unzip libtorch-cxx11-abi-shared-with-deps-2.1.0+cu121.zip
@@ -19,7 +20,7 @@ cd ..
 check cuda version from https://developer.nvidia.com/cuda-gpus.
 i.e. NVIDIA RTX A5000 is compute capability 86. 
 
-Change line 9 of [CMakeLists.txt](CMakeLists.txt) to the corresponding computer capability.
+Change line 8 of [CMakeLists.txt](CMakeLists.txt) to the corresponding computer capability.
 ```
 DCMAKE_CUDA_ARCHITECTURES=86 # from native to 86.
 ```
