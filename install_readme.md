@@ -9,11 +9,11 @@ bash
 
 3. Setup environment
 ```
-mkdir external
-cd external
+mkdir glomap/external
+cd glomapexternal
 wget https://download.pytorch.org/libtorch/cu124/libtorch-shared-with-deps-2.5.1%2Bcu124.zip
 unzip libtorch-cxx11-abi-shared-with-deps-2.1.0+cu121.zip
-cd ..
+cd ../..
 ```
 
 4. build glomap
